@@ -7,18 +7,15 @@ import com.sun.net.httpserver.HttpServer;
 import controller.ProductsController;
 import controller.SalesController;
 import controller.UsersController;
-import org.json.JSONObject;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
 
 public class Servidor {
     public void piServer() throws IOException {
         HttpHandler salesHandler = new SalesController.produtos();
         HttpHandler products = new ProductsController.produtos();
-        HttpHandler userHandler = new UsersController.Usuarios();
+        HttpHandler userHandler = new UsersController.user();
 
         HttpServer server = HttpServer.create(new InetSocketAddress(8081), 0);
         server.createContext("/api/users",exchange -> {
@@ -42,8 +39,10 @@ public class Servidor {
         String requestOrigin = exchange.getRequestHeaders().getFirst("Origin");
         if (requestOrigin != null) {
             headers.set("Access-Control-Allow-Origin", requestOrigin);
+            headers.set("Access-Control-Allow-Methods", "GET, OPTIONS, POST, PUT, DELETE");
+            headers.set("Access-Control-Allow-Headers", "Content-Type");
+            headers.set("Access-Control-Allow-Credentials", "true");
         }
-        headers.set("Access-Control-Allow-Methods", "GET, OPTIONS, POST, PUT, DELETE");
-        headers.set("Access-Control-Allow-Headers", "Content-Type");
     }
+
 }

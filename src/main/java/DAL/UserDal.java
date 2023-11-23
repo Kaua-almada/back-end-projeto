@@ -4,8 +4,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import Domain.Usuarios;
-import Services.ConexaoSqlServer;
 
 public class UserDal {
     public static Connection conectar(){
@@ -13,9 +11,9 @@ public class UserDal {
         try{
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 
-            String url = "jdbc:sqlserver://localhost:14333;databaseName=seubanco";
-            String usuario = "SENACRJEDU/116128412023.1";
-            String senha = "senac@12841";
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=pi;trustServerCertificate=true";
+            String usuario = "user";
+            String senha = "123456";
 
             conexao = DriverManager.getConnection(url,usuario,senha);
 
@@ -24,27 +22,28 @@ public class UserDal {
             }
         }catch(ClassNotFoundException | SQLException e){
             System.out.println("o erro foi "+ e);
-        }finally {
-            try {
-                if(conexao != null && !conexao.isClosed()){
-                    conexao.close();
-                }
-            }catch(SQLException e){
-                System.out.println("o erro no finally foi " + e);
-            }
+        }
+//        finally {
+//            try {
+//                if(conexao != null && !conexao.isClosed()){
+//                    conexao.close();
+//                }
+//            }catch(SQLException e){
+//                System.out.println("o erro no finally foi " + e);
+//            }
             return conexao;
         }
-    }
+
 
     // Inserir - create
-    public int inserirUsuarios(String name, String lastName, String email, String passeword, String cpf) throws SQLException{
+    public int inserirUsuarios(String name, String lastName, String email, String passeword, String cpf) throws SQLException {
         String sql = "INSERT INTO usuarios (name,lastName,email,passeword,cpf) VALUES(?,?,?,?,?)";
         int linhasAfetadas = 0;
         Connection conexao = conectar();
 
-
+        System.out.println("o banco esta "+ conexao);
         try (PreparedStatement statement = conexao.prepareStatement(sql)){
-
+            System.out.println("O ERRO NO TRY FOI " + statement);
             statement.setString(1,name);
             statement.setString(2,lastName);
             statement.setString(3,email);
@@ -55,11 +54,11 @@ public class UserDal {
 
             System.out.println("Foram modificadas "+ linhasAfetadas + " no banco de dados");
 
-            conexao.close();
             return linhasAfetadas;
         }
         catch(SQLException e){
-            System.out.println("O erro na inserçao de dados: " + e);
+            System.out.println("o banco esta (NO CATCH) "+ conexao);
+            System.out.println("O erro na inserçao de dados NO CATCH FOI: " + e);
             conexao.close();
         }
         conexao.close();
@@ -98,17 +97,17 @@ public class UserDal {
                 return result;
     }
    // Connection conexao,int id, String name, String lastName, String email, String passeword, String cpf
-    public int atualizarUsuario() throws SQLException{
+    public int atualizarUsuario(String name, String lastName, String email, String passeword, String cpf, int id) throws SQLException{
         String sql = "UPDATE usuarios SET name = ?,lastName = ?, email = ?, passeword = ?, cpf ? WHERE id = ?";
         int linahsAfetadas = 0;
 
         try (PreparedStatement statement = conectar().prepareStatement(sql)){
-//            statement.setString(1,name);
-//            statement.setString(2,lastName);
-//            statement.setString(3,email);
-//            statement.setString(4,passeword);
-//            statement.setString(5,cpf);
-//            statement.setInt(6,id);
+            statement.setString(1,name);
+            statement.setString(2,lastName);
+            statement.setString(3,email);
+            statement.setString(4,passeword);
+            statement.setString(5,cpf);
+            statement.setInt(6,id);
 
             int linhasAfetadaas = statement.executeUpdate();
             System.out.println("Foram modificadas "+ linhasAfetadaas + " no banco de dados");
@@ -119,12 +118,12 @@ public class UserDal {
         }
         return linahsAfetadas;
     }
-    public void excluirUsuario() throws  SQLException{
+    public int excluirUsuario(int id) throws  SQLException{
         String sql = "DELETE FROM usuarios WHERE id = ?";
         int linhasAfetadas = 0 ;
 
         try (PreparedStatement statement = conectar().prepareStatement(sql)){
-//            statement.setInt(1,id);
+            statement.setInt(1,id);
 
              linhasAfetadas = statement.executeUpdate();
 
@@ -133,5 +132,6 @@ public class UserDal {
             System.out.println("O erro na exclusao de dados foi: " + e);
         }
 
+        return linhasAfetadas;
     }
 }

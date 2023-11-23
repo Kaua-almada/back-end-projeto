@@ -9,10 +9,6 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Servidor servidor = new Servidor();
         ConexaoSqlServer conexaoSqlServer = new ConexaoSqlServer();
-//        ConexaoSqlServer.conectar();
-
         servidor.piServer();
-
-
         }
 }

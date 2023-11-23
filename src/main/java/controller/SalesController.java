@@ -10,13 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SalesController {
+
     private  static List<Sales> salesList = new ArrayList<>();
     static RespostaEndPoint res = new RespostaEndPoint();
     public static class produtos implements HttpHandler {
+        String response = "";
+        JSONObject responseJson = new JSONObject();
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            String response = "";
-            JSONObject responseJson = new JSONObject();
+
 
             if ("GET".equals(exchange.getRequestMethod())) {
                 System.out.println("metodo get");
@@ -75,4 +77,28 @@ public class SalesController {
             }
         }
     }
+    public static void doGet(HttpExchange exchange) throws IOException{
+        RespostaEndPoint res = new RespostaEndPoint();
+        System.out.println("metodo get");
+
+        Sales salesJson = new Sales();
+
+        List<Sales> getAllFromArray = Sales.getAllSales(salesList);
+            for (Sales sales : getAllFromArray) {
+                System.out.println("Name: " + sales.getName());
+                System.out.println("Products: " + sales.getProduts());
+                System.out.println("Valor: " + sales.getvalor());
+                System.out.println("Finished Sale: " + sales.getFinishedSale());
+                System.out.println("Discount: " + sales.getdiscount());
+                System.out.println("Date of Sale: " + sales.getdateSale());
+                System.out.println();
+                System.out.println("--------------------------------------");
+            }
+            res.enviarResponseJson(exchange, salesJson.arraytoJson(getAllFromArray), 200);
+        }
+
+    public static void doPost(HttpExchange exchange)throws IOException{}
+    public static void doPut()throws IOException{}
+    public static void doDelete()throws IOException{}
+    public static void doOptions()throws IOException{}
 }

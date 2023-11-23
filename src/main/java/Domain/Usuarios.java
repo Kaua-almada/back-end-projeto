@@ -16,7 +16,7 @@ public class Usuarios {
     public String cpf = "";
 
 
-    public Usuarios() {
+    public Usuarios(int id) {
 
     }
 
@@ -39,11 +39,11 @@ public class Usuarios {
         this.name = name;
     }
 
-    public String getlastLastname() {
+    public String getLastname() {
         return lastName;
     }
 
-    public void setlastLastname(String lastName) {
+    public void setLastname(String lastName) {
         this.lastName = lastName;
     }
 
@@ -104,7 +104,7 @@ public class Usuarios {
             for (Usuarios users : usersListArray) {
                 JSONObject valorJson = new JSONObject();
                 valorJson.put("name", users.getName());
-                valorJson.put("lastName", users.getlastLastname());
+                valorJson.put("lastName", users.getLastname());
                 valorJson.put("email", users.getemail());
                 valorJson.put("passeword", users.getpasseword());
                 valorJson.put("cpf", users.getcpf());
